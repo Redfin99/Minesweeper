@@ -1,0 +1,21 @@
+{
+  "name": "minesweeper",
+  "version": "1.0.0",
+  "description": "A simple Minesweeper recreation.",
+  "main": "index.js",
+  "scripts": {
+    "start": "webpack-dev-server"
+  },
+  "author": "Lewis Barron",
+  "license": "ISC",
+  "devDependencies": {
+    "ts-loader": "^7.0.3",
+    "typescript": "^3.8.3",
+    "webpack": "4.38.0",
+    "webpack-cli": "3.3.6",
+    "webpack-dev-server": "3.7.2"
+  },
+  "dependencies": {
+    "tslint": "5.20.0"
+  }
+}
