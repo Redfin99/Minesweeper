@@ -43,18 +43,28 @@ body {
     padding: 2px;
 }
 
-.cell {
+.cell, .revealed-cell, .mine-cell, .flag-cell {
     display: flex;
     justify-content: center;
     align-items: center;
-    background-color: red;
+    background-color: white;
     margin: 2px;
-}
-
-.cell {
+    
     user-select: none; /* supported by Chrome and Opera */
     -webkit-user-select: none; /* Safari */
     -khtml-user-select: none; /* Konqueror HTML */
     -moz-user-select: none; /* Firefox */
     -ms-user-select: none; /* Internet Explorer/Edge */
+}
+
+.revealed-cell, .mine-cell {
+    background-color: gray;
+}
+
+.mine-cell {
+    background-image: url(./Assets/Mine.png);
+}
+
+.flag-cell {
+    background-image: url(./Assets/Flag.png);
 }
