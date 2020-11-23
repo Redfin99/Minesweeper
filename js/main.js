@@ -6,9 +6,14 @@ class Main {
     }
     generateCells(gameSize, totalCells, totalMines) {
         const root = Math.sqrt(totalCells);
-        Cell.size = (gameSize / root);
-        Cell.paddedSize = (Cell.size - 4);
+        const panelSize = Math.floor(gameSize / root);
+        Cell.size = panelSize - 4;
         const game = document.getElementById('game');
+        const titlePanel = document.getElementById('title-panel');
+        const infoPanel = document.getElementById('info-panel');
+        game.style.gridTemplateColumns = `repeat(${root}, 1fr)`;
+        titlePanel.style.width = infoPanel.style.width = game.style.width = game.style.height = `${gameSize}px`;
+        titlePanel.style.height = infoPanel.style.height = `${panelSize}px`;
         const mineIndexes = this.randomIntList(totalMines, totalCells);
         for (let row = 0; row < root; row += 1) {
             this.cells[row] = [];
@@ -16,7 +21,7 @@ class Main {
                 const index = ((row * root) + col) + 1;
                 const isMineCell = mineIndexes.indexOf(index) > -1;
                 const adjacentMineCount = this.checkAdjacentCells(index, mineIndexes, root);
-                let currentCell = this.cells[row][col] = new Cell(isMineCell, adjacentMineCount);
+                const currentCell = this.cells[row][col] = new Cell(isMineCell, adjacentMineCount);
                 game.appendChild(currentCell.dom);
             }
         }
@@ -58,5 +63,10 @@ class Main {
         return adjacentMineCount;
     }
 }
-new Main(500, 100, 25);
+const game = {
+    size: 500,
+    totalCells: 100,
+    totalMines: 25
+};
+new Main(game.size, game.totalCells, game.totalMines);
 //# sourceMappingURL=main.js.map
