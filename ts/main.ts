@@ -1,6 +1,6 @@
 import { Cell } from "./cell.js";
 
-import { SquareNumber } from "./types.js";
+import { gameConfig, SquareNumber } from "./types.js";
 
 class Main {
     private cells: Cell[][] = [];
@@ -9,13 +9,20 @@ class Main {
         this.generateCells(gameSize, totalCells, totalMines);
     }
     
-    private generateCells( gameSize: number, totalCells: SquareNumber, totalMines: number): void {
+    private generateCells(gameSize: number, totalCells: SquareNumber, totalMines: number): void {
         const root = Math.sqrt(totalCells);
         
-        Cell.size = (gameSize / root);
-        Cell.paddedSize = (Cell.size - 4);
+        const panelSize = Math.floor(gameSize / root);
+        Cell.size = panelSize - 4;
 
         const game: HTMLDivElement = document.getElementById('game') as HTMLDivElement;
+        const titlePanel: HTMLDivElement = document.getElementById('title-panel') as HTMLDivElement;
+        const infoPanel: HTMLDivElement = document.getElementById('info-panel') as HTMLDivElement;
+        
+        game.style.gridTemplateColumns = `repeat(${root}, 1fr)`;
+        titlePanel.style.width = infoPanel.style.width = game.style.width = game.style.height = `${gameSize}px`;
+
+        titlePanel.style.height = infoPanel.style.height = `${panelSize}px`;
         
         const mineIndexes = this.randomIntList(totalMines, totalCells);
         
@@ -27,7 +34,7 @@ class Main {
                 const isMineCell: boolean = mineIndexes.indexOf(index) > -1;
                 const adjacentMineCount: number = this.checkAdjacentCells(index, mineIndexes, root);
 
-                let currentCell: Cell = this.cells[row][col] = new Cell(isMineCell, adjacentMineCount);
+                const currentCell: Cell = this.cells[row][col] = new Cell(isMineCell, adjacentMineCount);
 
                 game.appendChild(currentCell.dom);
             }
@@ -36,8 +43,10 @@ class Main {
 
     private randomIntList(length: number, limit: number): number[] {
         const intList: number[] = [];
+
         while(intList.length < length){
             const randomInt = Math.floor(Math.random() * limit) + 1;
+            
             if(intList.indexOf(randomInt) === -1) {
                 intList.push(randomInt);
             };
@@ -56,13 +65,16 @@ class Main {
             (index + rowLength - 1),
             (index - rowLength - 1)
         ]
+
         if (index % 10 === 0) {
             adjacentIndexes.splice(2, 3)
         }
         if (index % 10 === 1) {
             adjacentIndexes.splice(5, 3)
         }
+        
         let adjacentMineCount: number = 0;
+
         for (const adIndex of adjacentIndexes) {
             if (mineIndexes.indexOf(adIndex) > -1) {
                 adjacentMineCount += 1;
@@ -71,4 +83,9 @@ class Main {
         return adjacentMineCount;
     }
 }
-new Main(500, 100, 25);
+const game: gameConfig = {
+    size: 500,
+    totalCells: 100,
+    totalMines: 25
+}
+new Main(game.size, game.totalCells, game.totalMines);

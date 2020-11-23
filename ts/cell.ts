@@ -2,7 +2,6 @@ import { CellState } from "./types";
 
 export class Cell {
     public static size: number = 0;
-    public static paddedSize: number = 0;
 
     public hasMine: boolean;
     public adjacentMineCount: number = 0;
@@ -17,8 +16,7 @@ export class Cell {
         this.dom = document.createElement('div');
         this.dom.className = "cell";
 
-        this.dom.style.width = this.dom.style.height = `${Cell.paddedSize}px`;
-        this.dom.style.backgroundSize = `${Cell.paddedSize}px`;
+        this.dom.style.width = this.dom.style.height = this.dom.style.backgroundSize = `${Cell.size}px`;
 
         this.dom.addEventListener('click', () => this.reveal());
         this.dom.addEventListener('auxclick', () => this.flag());
@@ -34,23 +32,23 @@ export class Cell {
         if (this.hasMine) {
             this.dom.className = "mine-cell"
         }
-        else if (this.adjacentMineCount === 0) {
-            return;
-        }
-        else {
+        else if (this.adjacentMineCount > 0) {
             this.dom.innerText = this.adjacentMineCount.toString();
+
+            const textColours: string[] = [
+                'white', 'blue', 'green', 'red', 'purple', 'maroon', 'teal', 'black', 'grey'
+            ]
+            this.dom.style.color = textColours[this.adjacentMineCount];
         }
     }
     private flag() {
-        if (this.state === "revealed") {
-            return;
+        if (this.state === "hidden") {
+            this.state = 'flagged';
+            this.dom.className = "flag-cell"
         }
-        if (this.state === "flagged") {
+        else if (this.state === "flagged") {
             this.state = 'hidden';
             this.dom.className = "cell";
-            return;
         }
-        this.state = 'flagged';
-        this.dom.className = "flag-cell"
     }
 }
